@@ -1,7 +1,7 @@
 import type { AstroIntegration } from "astro";
+import type { CmsConfig } from "@sveltia/cms";
 
-// Define a minimal CmsConfig type since the upstream package doesn't export types correctly
-export type CmsConfig = Record<string, any>;
+export type { CmsConfig };
 
 export type SveltiaOptions = {
   /**
