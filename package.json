@@ -2,6 +2,9 @@
   "name": "astro-sveltia-cms",
   "version": "0.0.1",
   "description": "Sveltia CMS integration for Astro",
+  "keywords": [
+    "astro-integration"
+  ],
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
