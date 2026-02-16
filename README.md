@@ -26,7 +26,6 @@ export default defineConfig({
       route: "/cms", // Optional, defaults to "/admin"
       title: "My CMS", // Optional, defaults to "Sveltia CMS"
       config: {
-        load_config_file: false,
         backend: {
           name: "github",
           repo: "my/repo",

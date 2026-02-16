@@ -9,7 +9,6 @@ export default defineConfig({
       route: "/cms",
       title: "My Custom CMS",
       config: {
-        load_config_file: false,
         backend: {
           name: "test-repo",
         },

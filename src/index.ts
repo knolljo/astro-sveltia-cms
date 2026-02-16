@@ -26,6 +26,11 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
   const virtualModuleId = "virtual:astro-sveltia-cms/config";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
 
+  const config = {
+    ...options.config,
+    load_config_file: false,
+  };
+
   return {
     name: "astro-sveltia-cms",
     hooks: {
@@ -50,7 +55,7 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
                 load(id) {
                   if (id === resolvedVirtualModuleId) {
                     return `
-                      export const config = ${JSON.stringify(options.config)};
+                      export const config = ${JSON.stringify(config)};
                       export const title = ${JSON.stringify(title)};
                     `;
                   }
