@@ -1,6 +1,6 @@
 {
   "name": "@joknoll/astro-sveltia-cms",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Sveltia CMS integration for Astro",
   "keywords": [
     "astro-integration"
