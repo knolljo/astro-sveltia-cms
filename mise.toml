@@ -1,0 +1,50 @@
+[tools]
+bun = "latest"
+node = { version = "22", postinstall = "corepack enable" }
+
+# === Git Helpers ===
+git-cliff = "latest"
+gitleaks = "latest"
+lefthook = "latest"
+committed = "latest"
+
+[hooks]
+postinstall = ["lefthook install"] # Install Git hooks after installation
+
+[env]
+_.path = ["node_modules/.bin"]
+_.file = "./.env.local"
+
+
+[tasks.clean]
+description = "Clean project"
+run = ["rm -rf node_modules dist example/node_modules"]
+
+[tasks."release:version"]
+description = "Bump package version and create a git tag."
+usage = '''
+arg "[increment]" default="patch" help="Version increment" {
+  choices "patch" "minor" "major" "prepatch" "preminor" "premajor" "prerelease"
+}
+'''
+run = "npm version ${usage_increment}"
+
+[tasks."release:build"]
+description = "Build the package for distribution"
+depends = ["release:version"]
+run = "bun run build"
+
+[tasks."release:publish"]
+description = "Publish the package to npm"
+depends = ["release:build"]
+raw = true
+run = "npm publish"
+
+[tasks.release]
+description = "Full release: bump version → build → publish to npm"
+depends = ["update:sveltia", "release:publish"]
+run = "echo 'Released and published to npm!'"
+
+[tasks."update:sveltia"]
+description = "Update the sveltia-cms dependency to the latest version"
+run = "bun update @sveltia/cms"
