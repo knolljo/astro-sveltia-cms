@@ -3,11 +3,6 @@ import type { CmsConfig, EntryCollection, FileCollection } from "@sveltia/cms";
 
 const CONFIG_PATH = ".astro/integrations/astro-sveltia-cms/config.json";
 
-/**
- * Read the CMS config from the codegen JSON file written by the integration.
- * Located at `.astro/integrations/astro-sveltia-cms/config.json` relative to
- * the project root (where Astro runs with cwd set to the project root).
- */
 export function readCmsConfig(): CmsConfig {
   const configPath = `${process.cwd()}/${CONFIG_PATH}`;
   try {
@@ -21,11 +16,6 @@ export function readCmsConfig(): CmsConfig {
   }
 }
 
-/**
- * Resolve a collection name to an `EntryCollection` from the CMS config.
- * Throws descriptive errors if the collection is not found or is not a
- * folder-based collection.
- */
 export function resolveCollection(config: CmsConfig, name: string): EntryCollection {
   const collections = config.collections ?? [];
   const match = collections.find((c) => "name" in c && c.name === name);

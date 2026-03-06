@@ -12,10 +12,8 @@ export const frontmatterFormats = new Set([
   undefined,
 ]);
 
-// ---------------------------------------------------------------------------
 // Narrow helper interfaces — used to safely access widget-specific properties
 // without scattering `as` casts throughout the code.
-// ---------------------------------------------------------------------------
 
 interface NumberField {
   value_type?: string;
@@ -56,22 +54,11 @@ interface VariantType {
   fields?: Field[];
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Returns true when a field should be optional in the Zod schema.
- * Sveltia CMS defaults `required` to `true` for all visible fields.
- */
 export function isOptionalField(field: Field): boolean {
   if (!("required" in field)) return false;
   return field.required === false;
 }
 
-/**
- * Normalize select field options to an array of raw values.
- */
 export function getSelectValues(
   options: SelectFieldValue[] | { label: string; value: SelectFieldValue }[],
 ): SelectFieldValue[] {
@@ -83,11 +70,6 @@ export function getSelectValues(
   return options as SelectFieldValue[];
 }
 
-/**
- * Build a Zod schema from an array of select values.
- * Uses `z.enum` for all-string values; falls back to a union of literals for
- * mixed types (string | number | null).
- */
 export function selectValuesToZod(values: SelectFieldValue[]): z.ZodTypeAny {
   if (values.length === 0) return z.any();
 
@@ -106,16 +88,8 @@ export function selectValuesToZod(values: SelectFieldValue[]): z.ZodTypeAny {
   return z.union(literals as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]);
 }
 
-// ---------------------------------------------------------------------------
-// Discriminated union builder — shared by object and list widget handlers
-// ---------------------------------------------------------------------------
-
 type ZodObjectShape = z.ZodObject<Record<string, z.ZodTypeAny>>;
 
-/**
- * Build a Zod discriminated union from an array of variant type definitions.
- * Each variant becomes a `z.object` with a literal discriminant key.
- */
 function buildVariantSchemas(
   variants: VariantType[],
   typeKey: string,
@@ -144,10 +118,6 @@ function variantsToDiscriminatedUnion(
     schemas as [ZodObjectShape, ZodObjectShape, ...ZodObjectShape[]],
   );
 }
-
-// ---------------------------------------------------------------------------
-// Per-widget handlers
-// ---------------------------------------------------------------------------
 
 function numberFieldToZod(field: Field): z.ZodTypeAny {
   const valueType = (field as NumberField).value_type ?? "int";
@@ -231,14 +201,6 @@ function listFieldToZod(field: Field): z.ZodTypeAny {
   return z.array(z.string());
 }
 
-// ---------------------------------------------------------------------------
-// Public schema API
-// ---------------------------------------------------------------------------
-
-/**
- * Convert a single Sveltia CMS field definition to a Zod schema type.
- * Recursively handles nested fields (object, list).
- */
 export function fieldToZod(field: Field): z.ZodTypeAny {
   const widget = "widget" in field ? field.widget : "string";
 
@@ -292,32 +254,6 @@ export function fieldToZod(field: Field): z.ZodTypeAny {
   }
 }
 
-/**
- * Generate a Zod schema from an array of Sveltia CMS field definitions.
- *
- * Can be used standalone when you want to provide your own loader but still
- * auto-generate the schema from Sveltia CMS field definitions.
- *
- * @param fields - Array of Sveltia CMS field definitions
- * @param options.excludeBody - Exclude body fields (default: `true`).
- *   Set to `false` if your collection doesn't use a frontmatter format.
- *
- * @example
- * ```ts
- * import { defineCollection } from 'astro:content';
- * import { glob } from 'astro/loaders';
- * import { sveltiaSchema } from 'astro-sveltia-cms/loader';
- *
- * const posts = defineCollection({
- *   loader: glob({ pattern: '**\/*.md', base: './src/content/posts' }),
- *   schema: sveltiaSchema([
- *     { name: 'title', widget: 'string' },
- *     { name: 'date', widget: 'datetime' },
- *     { name: 'body', widget: 'markdown' },
- *   ]),
- * });
- * ```
- */
 export function sveltiaSchema(
   fields: Field[],
   options?: { excludeBody?: boolean },

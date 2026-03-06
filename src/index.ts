@@ -5,26 +5,11 @@ import { fileURLToPath } from "node:url";
 
 export type { CmsConfig };
 
-/**
- * The full Sveltia CMS configuration object.
- * Alias for `CmsConfig` from `@sveltia/cms`.
- */
 export type SveltiaConfig = CmsConfig;
 
 export type SveltiaOptions = {
-  /**
-   * The route where the CMS will be served.
-   * @default "/admin"
-   */
   route?: string;
-  /**
-   * The page title for the CMS admin interface.
-   * @default "Sveltia CMS"
-   */
   title?: string;
-  /**
-   * The Sveltia CMS configuration object.
-   */
   config: CmsConfig;
 };
 
