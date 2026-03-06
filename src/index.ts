@@ -81,6 +81,39 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
 
         logger.info(`Sveltia CMS injected at ${route}`);
       },
+
+      "astro:config:done": ({ injectTypes }) => {
+        // Extract entry collection names from the CMS config
+        const collectionNames = (config.collections ?? [])
+          .filter(
+            (c) =>
+              "name" in c &&
+              typeof (c as { name?: string }).name === "string" &&
+              "folder" in c &&
+              "fields" in c,
+          )
+          .map((c) => (c as { name: string }).name);
+
+        if (collectionNames.length === 0) return;
+
+        // Build a string literal union type: "posts" | "pages" | ...
+        const unionType = collectionNames
+          .map((n) => JSON.stringify(n))
+          .join(" | ");
+
+        injectTypes({
+          filename: "types.d.ts",
+          content: `declare module "@joknoll/astro-sveltia-cms/loader" {
+  import type { EntryCollection } from "@sveltia/cms";
+
+  type SveltiaCollectionName = ${unionType};
+
+  export function sveltiaLoader(name: SveltiaCollectionName): import("@joknoll/astro-sveltia-cms/loader").SveltiaLoader;
+  export function sveltiaLoader(collection: EntryCollection): import("@joknoll/astro-sveltia-cms/loader").SveltiaLoader;
+}
+`,
+        });
+      },
     },
   };
 }

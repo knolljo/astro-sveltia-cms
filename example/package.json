@@ -12,7 +12,7 @@
     "@astrojs/check": "^0.9.6",
     "@sveltia/cms": "^0.140.4",
     "astro": "^5.17.1",
-    "astro-sveltia-cms": "file:..",
+    "@joknoll/astro-sveltia-cms": "file:..",
     "typescript": "^5.9.3"
   }
 }
