@@ -8,8 +8,4 @@ const posts = defineCollection({
   loader: sveltiaLoader("posts"),
 });
 
-const meta = defineCollection({
-  loader: sveltiaLoader("metadata"),
-});
-
 export const collections = { posts };
