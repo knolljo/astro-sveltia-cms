@@ -92,38 +92,42 @@ describe("exhaustiveness — JSON Schema canary (schema → our list)", () => {
 
   it("every widget type in the JSON Schema is present in KNOWN_WIDGET_TYPES", () => {
     const schema = loadSveltiaSchema();
-    const schemaTypes: string[] =
-      schema.definitions.CustomField.properties.widget.not.enum;
+    const schemaTypes: string[] = schema.definitions.CustomField.properties.widget.not.enum;
 
     const unknown = schemaTypes.filter((t) => !KNOWN_WIDGET_TYPES.includes(t as BuiltInFieldType));
 
-    expect(unknown, [
-      `New widget type(s) found in @sveltia/cms that are not yet handled by fieldToZod:`,
-      `  ${unknown.map((t) => JSON.stringify(t)).join(", ")}`,
-      ``,
-      `To fix this failure:`,
-      `  1. Add a case to the fieldToZod() switch in src/loader.ts`,
-      `  2. Add the type to _exhaustiveWidgetCoverage in tests/exhaustiveness.test.ts`,
-      `  3. Add tests in tests/field-to-zod.test.ts`,
-    ].join("\n")).toHaveLength(0);
+    expect(
+      unknown,
+      [
+        `New widget type(s) found in @sveltia/cms that are not yet handled by fieldToZod:`,
+        `  ${unknown.map((t) => JSON.stringify(t)).join(", ")}`,
+        ``,
+        `To fix this failure:`,
+        `  1. Add a case to the fieldToZod() switch in src/loader.ts`,
+        `  2. Add the type to _exhaustiveWidgetCoverage in tests/exhaustiveness.test.ts`,
+        `  3. Add tests in tests/field-to-zod.test.ts`,
+      ].join("\n"),
+    ).toHaveLength(0);
   });
 
   it("every type in KNOWN_WIDGET_TYPES is still present in the JSON Schema", () => {
     const schema = loadSveltiaSchema();
-    const schemaTypes: string[] =
-      schema.definitions.CustomField.properties.widget.not.enum;
+    const schemaTypes: string[] = schema.definitions.CustomField.properties.widget.not.enum;
 
     const removed = KNOWN_WIDGET_TYPES.filter((t) => !schemaTypes.includes(t));
 
-    expect(removed, [
-      `Widget type(s) removed from @sveltia/cms that are still in KNOWN_WIDGET_TYPES:`,
-      `  ${removed.map((t) => JSON.stringify(t)).join(", ")}`,
-      ``,
-      `To fix this failure:`,
-      `  1. Remove the case from fieldToZod() in src/loader.ts (if appropriate)`,
-      `  2. Remove the type from _exhaustiveWidgetCoverage in tests/exhaustiveness.test.ts`,
-      `  3. Remove or update the corresponding tests in tests/field-to-zod.test.ts`,
-    ].join("\n")).toHaveLength(0);
+    expect(
+      removed,
+      [
+        `Widget type(s) removed from @sveltia/cms that are still in KNOWN_WIDGET_TYPES:`,
+        `  ${removed.map((t) => JSON.stringify(t)).join(", ")}`,
+        ``,
+        `To fix this failure:`,
+        `  1. Remove the case from fieldToZod() in src/loader.ts (if appropriate)`,
+        `  2. Remove the type from _exhaustiveWidgetCoverage in tests/exhaustiveness.test.ts`,
+        `  3. Remove or update the corresponding tests in tests/field-to-zod.test.ts`,
+      ].join("\n"),
+    ).toHaveLength(0);
   });
 
   it("the JSON Schema widget list and KNOWN_WIDGET_TYPES are identical sets", () => {

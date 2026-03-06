@@ -661,7 +661,10 @@ describe('fieldToZod — widget: "list"', () => {
         { name: "b", fields: [{ name: "num", widget: "number" }] },
       ],
     });
-    accepts(s, [{ kind: "a", val: "x" }, { kind: "b", num: 9 }]);
+    accepts(s, [
+      { kind: "a", val: "x" },
+      { kind: "b", num: 9 },
+    ]);
     rejects(s, [{ type: "a", val: "x" }]); // wrong key
   });
 

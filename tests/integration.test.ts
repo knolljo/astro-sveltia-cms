@@ -103,7 +103,9 @@ describe("sveltiaCms — astro:config:done type injection", () => {
     });
 
     let injectTypesCalled = false;
-    const mockInjectTypes = () => { injectTypesCalled = true; };
+    const mockInjectTypes = () => {
+      injectTypesCalled = true;
+    };
     type DoneHook = (opts: { injectTypes: typeof mockInjectTypes }) => void;
 
     (integration.hooks["astro:config:done"] as unknown as DoneHook)({

@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "astro/zod";
-import {
-  getSelectValues,
-  isOptionalField,
-  selectValuesToZod,
-} from "../src/loader.ts";
+import { getSelectValues, isOptionalField, selectValuesToZod } from "../src/loader.ts";
 import type { Field } from "@sveltia/cms";
 
 describe("isOptionalField", () => {
