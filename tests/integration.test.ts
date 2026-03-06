@@ -1,8 +1,3 @@
-/**
- * Lightweight smoke tests for the sveltiaCms() Astro integration factory.
- * We verify the returned object shape and configuration without running
- * actual Astro build hooks (which require a full Vite/Astro environment).
- */
 import { describe, expect, it } from "vitest";
 import sveltiaCms from "../src/index.ts";
 import type { CmsConfig } from "@sveltia/cms";
@@ -17,10 +12,6 @@ const minimalConfig: CmsConfig = {
     },
   ],
 };
-
-// ---------------------------------------------------------------------------
-// Return shape
-// ---------------------------------------------------------------------------
 
 describe("sveltiaCms — return shape", () => {
   it('returns an integration named "astro-sveltia-cms"', () => {
@@ -46,10 +37,6 @@ describe("sveltiaCms — return shape", () => {
     expect(typeof integration.hooks["astro:config:done"]).toBe("function");
   });
 });
-
-// ---------------------------------------------------------------------------
-// Options handling
-// ---------------------------------------------------------------------------
 
 describe("sveltiaCms — options handling", () => {
   it("accepts minimal options with only config", () => {
@@ -80,10 +67,6 @@ describe("sveltiaCms — options handling", () => {
     expect(() => sveltiaCms({ config })).not.toThrow();
   });
 });
-
-// ---------------------------------------------------------------------------
-// Config handling (astro:config:done hook — type injection)
-// ---------------------------------------------------------------------------
 
 describe("sveltiaCms — astro:config:done type injection", () => {
   it("calls injectTypes with a union of collection names", () => {

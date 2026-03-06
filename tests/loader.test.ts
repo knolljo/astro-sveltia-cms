@@ -1,14 +1,6 @@
-/**
- * Tests for sveltiaLoader, resolveCollection, and readCmsConfig.
- * Uses vi.mock to avoid actual filesystem access.
- */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readCmsConfig, resolveCollection, sveltiaLoader } from "../src/loader.ts";
 import type { CmsConfig, EntryCollection } from "@sveltia/cms";
-
-// ---------------------------------------------------------------------------
-// resolveCollection
-// ---------------------------------------------------------------------------
 
 describe("resolveCollection", () => {
   const postsCollection: EntryCollection = {
@@ -79,19 +71,12 @@ describe("resolveCollection", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// readCmsConfig
-// ---------------------------------------------------------------------------
-
 describe("readCmsConfig", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
 
   it("throws a descriptive error when file is missing", () => {
-    // Without mocking, the actual file won't exist in the test environment,
-    // so readCmsConfig() will throw because .astro/integrations/.../config.json
-    // doesn't exist in the project root during tests.
     expect(() => readCmsConfig()).toThrowError(/Could not read CMS config/);
   });
 
@@ -103,10 +88,6 @@ describe("readCmsConfig", () => {
     expect(() => readCmsConfig()).toThrowError(/astro\.config\.mjs/);
   });
 });
-
-// ---------------------------------------------------------------------------
-// sveltiaLoader — object form
-// ---------------------------------------------------------------------------
 
 describe("sveltiaLoader — object form", () => {
   const collection: EntryCollection = {
@@ -136,7 +117,6 @@ describe("sveltiaLoader — object form", () => {
 
   it("schema validates data matching the fields", () => {
     const loader = sveltiaLoader(collection);
-    // schema is a ZodObject directly for the object form
     const schema = loader.schema as { safeParse: (v: unknown) => { success: boolean } };
     expect(schema.safeParse({ title: "Hello", date: "2024-01-01" }).success).toBe(true);
     expect(schema.safeParse({ date: "2024-01-01" }).success).toBe(false); // missing title
@@ -150,7 +130,6 @@ describe("sveltiaLoader — object form", () => {
         { name: "title", widget: "string" },
         { name: "body", widget: "markdown" },
       ],
-      // no format → defaults to yaml-frontmatter (frontmatter)
     };
     const loader = sveltiaLoader(col);
     const schema = loader.schema as { shape: Record<string, unknown> };
@@ -175,17 +154,11 @@ describe("sveltiaLoader — object form", () => {
   });
 
   it("uses default extension 'md' when extension is not specified", () => {
-    // The loader should build a glob pattern for .md files — we just verify
-    // the loader object itself is created without error and has the right shape
     const loader = sveltiaLoader({ name: "posts", folder: "src/posts", fields: [] });
     expect(loader.name).toBe("sveltia-cms");
     expect(loader.load).toBeDefined();
   });
 });
-
-// ---------------------------------------------------------------------------
-// sveltiaLoader — string form
-// ---------------------------------------------------------------------------
 
 describe("sveltiaLoader — string form", () => {
   it('returns a loader with name "sveltia-cms"', () => {
@@ -205,16 +178,13 @@ describe("sveltiaLoader — string form", () => {
 
   it("schema() throws when config file is missing (no integration setup)", () => {
     const loader = sveltiaLoader("posts");
-    // In a test environment, .astro/integrations/astro-sveltia-cms/config.json won't exist
     if (typeof loader.schema === "function") {
       expect(() => (loader.schema as () => unknown)()).toThrowError(/Could not read CMS config/);
     }
-    // If schema is an object (shouldn't be for string form), it's fine too
   });
 
   it("load() throws when config file is missing (no integration setup)", async () => {
     const loader = sveltiaLoader("posts");
-    // load() calls readCmsConfig() which will fail without the config file
     await expect(loader.load({} as never)).rejects.toThrowError(/Could not read CMS config/);
   });
 });

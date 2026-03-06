@@ -1,22 +1,8 @@
-/**
- * Deep tests for fieldToZod — one describe block per widget type,
- * covering every branch documented in the Sveltia CMS type definitions.
- *
- * Each test:
- *  1. Calls fieldToZod with a concrete field definition.
- *  2. Verifies valid data parses successfully.
- *  3. Verifies invalid data is rejected.
- */
 import { describe, expect, it } from "vitest";
 import { z } from "astro/zod";
 import { fieldToZod } from "../src/loader.ts";
 import type { Field } from "@sveltia/cms";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Assert a schema accepts a value and returns it. */
 function accepts(schema: z.ZodTypeAny, value: unknown): void {
   const result = schema.safeParse(value);
   if (!result.success) {
@@ -26,17 +12,12 @@ function accepts(schema: z.ZodTypeAny, value: unknown): void {
   }
 }
 
-/** Assert a schema rejects a value. */
 function rejects(schema: z.ZodTypeAny, value: unknown): void {
   const result = schema.safeParse(value);
   if (result.success) {
     throw new Error(`Expected schema to reject ${JSON.stringify(value)}, but it was accepted`);
   }
 }
-
-// ---------------------------------------------------------------------------
-// Simple string widgets
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "string"', () => {
   it("accepts a string", () => {
@@ -113,10 +94,6 @@ describe('fieldToZod — widget: "richtext"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// String field without widget property (default)
-// ---------------------------------------------------------------------------
-
 describe("fieldToZod — no widget (StringField default)", () => {
   it("accepts a string when widget is absent", () => {
     // StringField is the only type where widget is optional
@@ -128,10 +105,6 @@ describe("fieldToZod — no widget (StringField default)", () => {
     rejects(fieldToZod(field), 42);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Number
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "number"', () => {
   it("default (no value_type) → z.number()", () => {
@@ -169,10 +142,6 @@ describe('fieldToZod — widget: "number"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Boolean
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "boolean"', () => {
   it("accepts true and false", () => {
     const s = fieldToZod({ name: "b", widget: "boolean" });
@@ -186,10 +155,6 @@ describe('fieldToZod — widget: "boolean"', () => {
     rejects(fieldToZod({ name: "b", widget: "boolean" }), 1);
   });
 });
-
-// ---------------------------------------------------------------------------
-// DateTime
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "datetime"', () => {
   it("accepts an ISO date string (coerced to Date)", () => {
@@ -213,10 +178,6 @@ describe('fieldToZod — widget: "datetime"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Image
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "image"', () => {
   it("accepts a path string when multiple is absent", () => {
     accepts(fieldToZod({ name: "img", widget: "image" }), "/uploads/photo.jpg");
@@ -239,10 +200,6 @@ describe('fieldToZod — widget: "image"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// File
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "file"', () => {
   it("single file → z.string()", () => {
     accepts(fieldToZod({ name: "f", widget: "file" }), "/docs/resume.pdf");
@@ -256,12 +213,7 @@ describe('fieldToZod — widget: "file"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Select
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "select"', () => {
-  // Bare string options
   it("string options → z.enum()", () => {
     const s = fieldToZod({ name: "s", widget: "select", options: ["a", "b", "c"] });
     accepts(s, "a");
@@ -283,7 +235,6 @@ describe('fieldToZod — widget: "select"', () => {
     rejects(s, ["x", "w"]); // "w" not in enum
   });
 
-  // Label/value objects
   it("label/value options → extracts values for z.enum()", () => {
     const s = fieldToZod({
       name: "s",
@@ -313,7 +264,6 @@ describe('fieldToZod — widget: "select"', () => {
     rejects(s, ["One"]); // label, not value
   });
 
-  // Numeric options
   it("numeric options → z.union of literals", () => {
     const s = fieldToZod({ name: "s", widget: "select", options: [1, 2, 3] });
     accepts(s, 1);
@@ -329,7 +279,6 @@ describe('fieldToZod — widget: "select"', () => {
     rejects(s, "99");
   });
 
-  // Mixed types
   it("mixed string/number/null options → z.union of literals", () => {
     const s = fieldToZod({ name: "s", widget: "select", options: ["yes", 0, null] });
     accepts(s, "yes");
@@ -352,7 +301,6 @@ describe('fieldToZod — widget: "select"', () => {
     rejects(s, ["b"]);
   });
 
-  // Empty options
   it("empty options → z.any()", () => {
     const s = fieldToZod({ name: "s", widget: "select", options: [] });
     accepts(s, "anything");
@@ -360,10 +308,6 @@ describe('fieldToZod — widget: "select"', () => {
     accepts(s, null);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Relation
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "relation"', () => {
   it("single → z.string()", () => {
@@ -384,10 +328,6 @@ describe('fieldToZod — widget: "relation"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// KeyValue
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "keyvalue"', () => {
   it("accepts a string-keyed string-valued record", () => {
     const s = fieldToZod({ name: "kv", widget: "keyvalue" });
@@ -403,10 +343,6 @@ describe('fieldToZod — widget: "keyvalue"', () => {
     rejects(fieldToZod({ name: "kv", widget: "keyvalue" }), ["a", "b"]);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Code
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "code"', () => {
   it("default → z.object({ code, lang })", () => {
@@ -446,10 +382,6 @@ describe('fieldToZod — widget: "code"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Hidden
-// ---------------------------------------------------------------------------
-
 describe('fieldToZod — widget: "hidden"', () => {
   it("string default → z.string()", () => {
     const s = fieldToZod({ name: "h", widget: "hidden", default: "hello" });
@@ -472,7 +404,6 @@ describe('fieldToZod — widget: "hidden"', () => {
 
   it("object default → z.any()", () => {
     const s = fieldToZod({ name: "h", widget: "hidden", default: { foo: "bar" } });
-    // z.any() accepts everything
     accepts(s, { anything: true });
     accepts(s, "even strings");
     accepts(s, null);
@@ -491,10 +422,6 @@ describe('fieldToZod — widget: "hidden"', () => {
     accepts(s, null);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Object
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "object"', () => {
   it("with fields → z.object() with correct shape", () => {
@@ -634,10 +561,6 @@ describe('fieldToZod — widget: "object"', () => {
     rejects(s, { type: "card" }); // title required
   });
 });
-
-// ---------------------------------------------------------------------------
-// List
-// ---------------------------------------------------------------------------
 
 describe('fieldToZod — widget: "list"', () => {
   it("simple list (no subfield) → z.array(z.string())", () => {
@@ -779,14 +702,9 @@ describe('fieldToZod — widget: "list"', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Unknown / custom widget
-// ---------------------------------------------------------------------------
-
 describe("fieldToZod — unknown/custom widget", () => {
   it("returns z.any() for an unknown widget name", () => {
     const s = fieldToZod({ name: "x", widget: "my-custom-widget" } as unknown as Field);
-    // z.any() accepts everything
     accepts(s, "string");
     accepts(s, 42);
     accepts(s, null);

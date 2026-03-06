@@ -1,14 +1,5 @@
-/**
- * Tests for the public sveltiaSchema() API.
- * Focuses on the layer above fieldToZod: body exclusion, optional fields,
- * multi-field object shapes, and realistic collection configurations.
- */
 import { describe, expect, it } from "vitest";
 import { sveltiaSchema } from "../src/loader.ts";
-
-// ---------------------------------------------------------------------------
-// Body field exclusion
-// ---------------------------------------------------------------------------
 
 describe("sveltiaSchema — body field exclusion", () => {
   it("excludes a markdown body field by default (excludeBody: true)", () => {
@@ -52,7 +43,6 @@ describe("sveltiaSchema — body field exclusion", () => {
   });
 
   it("does NOT exclude a body field with a non-markdown/richtext widget", () => {
-    // A field named "body" but with widget "string" should still be included
     const schema = sveltiaSchema([{ name: "body", widget: "string" }]);
     expect(schema.shape).toHaveProperty("body");
   });
@@ -72,10 +62,6 @@ describe("sveltiaSchema — body field exclusion", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Optional fields
-// ---------------------------------------------------------------------------
-
 describe("sveltiaSchema — optional fields", () => {
   it("required: false → field is optional in parsed schema", () => {
     const schema = sveltiaSchema([
@@ -83,11 +69,8 @@ describe("sveltiaSchema — optional fields", () => {
       { name: "subtitle", widget: "string", required: false },
     ]);
 
-    // Without subtitle — should succeed
     expect(schema.safeParse({ title: "Hello" }).success).toBe(true);
-    // With subtitle — should succeed
     expect(schema.safeParse({ title: "Hello", subtitle: "Sub" }).success).toBe(true);
-    // Missing required title — should fail
     expect(schema.safeParse({ subtitle: "Sub" }).success).toBe(false);
   });
 
@@ -112,10 +95,6 @@ describe("sveltiaSchema — optional fields", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Empty fields array
-// ---------------------------------------------------------------------------
-
 describe("sveltiaSchema — edge cases", () => {
   it("empty fields array → z.object({})", () => {
     const schema = sveltiaSchema([]);
@@ -128,10 +107,6 @@ describe("sveltiaSchema — edge cases", () => {
     expect(Object.keys(schema.shape)).toHaveLength(0);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Realistic collection schemas
-// ---------------------------------------------------------------------------
 
 describe("sveltiaSchema — realistic blog post collection", () => {
   const fields = [

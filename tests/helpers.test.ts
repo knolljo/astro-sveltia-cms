@@ -7,10 +7,6 @@ import {
 } from "../src/loader.ts";
 import type { Field } from "@sveltia/cms";
 
-// ---------------------------------------------------------------------------
-// isOptionalField
-// ---------------------------------------------------------------------------
-
 describe("isOptionalField", () => {
   it("returns true when required is false", () => {
     const field = { name: "x", widget: "string", required: false } as Field;
@@ -39,10 +35,6 @@ describe("isOptionalField", () => {
     expect(isOptionalField(field)).toBe(false);
   });
 });
-
-// ---------------------------------------------------------------------------
-// getSelectValues
-// ---------------------------------------------------------------------------
 
 describe("getSelectValues", () => {
   it("returns bare string values unchanged", () => {
@@ -82,10 +74,6 @@ describe("getSelectValues", () => {
     expect(getSelectValues([])).toEqual([]);
   });
 });
-
-// ---------------------------------------------------------------------------
-// selectValuesToZod
-// ---------------------------------------------------------------------------
 
 describe("selectValuesToZod", () => {
   it("produces z.enum for all-string values", () => {
@@ -136,7 +124,6 @@ describe("selectValuesToZod", () => {
 
   it("returns z.any() for empty values", () => {
     const schema = selectValuesToZod([]);
-    // z.any() accepts everything
     expect(schema.safeParse("anything").success).toBe(true);
     expect(schema.safeParse(42).success).toBe(true);
     expect(schema.safeParse(null).success).toBe(true);
