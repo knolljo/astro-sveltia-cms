@@ -23,9 +23,11 @@ const posts = await getCollection("posts");
 			<h2>Blog Posts</h2>
 			<ul>
 				{
-					posts.map(({ data: post }) => (
+					posts.map(({ id, data: post }) => (
 						<li>
-							{post.title}
+							<a href={`/blog/${id}`}>
+								{post.title}
+							</a>
 						</li>
 					))
 				}
