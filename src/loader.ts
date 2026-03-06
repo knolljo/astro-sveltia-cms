@@ -37,9 +37,7 @@ function getSelectValues(
 ): SelectFieldValue[] {
   if (options.length === 0) return [];
   if (typeof options[0] === "object" && options[0] !== null && "value" in options[0]) {
-    return (options as { label: string; value: SelectFieldValue }[]).map(
-      (o) => o.value,
-    );
+    return (options as { label: string; value: SelectFieldValue }[]).map((o) => o.value);
   }
   return options as SelectFieldValue[];
 }
@@ -187,9 +185,7 @@ function fieldToZod(field: Field): z.ZodTypeAny {
           if (variant.fields) {
             for (const subField of variant.fields) {
               const subSchema = fieldToZod(subField);
-              shape[subField.name] = isOptionalField(subField)
-                ? subSchema.optional()
-                : subSchema;
+              shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
             }
           }
           return z.object(shape);
@@ -211,9 +207,7 @@ function fieldToZod(field: Field): z.ZodTypeAny {
         const shape: Record<string, z.ZodTypeAny> = {};
         for (const subField of objectField.fields) {
           const subSchema = fieldToZod(subField);
-          shape[subField.name] = isOptionalField(subField)
-            ? subSchema.optional()
-            : subSchema;
+          shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
         }
         return z.object(shape);
       }
@@ -243,9 +237,7 @@ function fieldToZod(field: Field): z.ZodTypeAny {
           if (variant.fields) {
             for (const subField of variant.fields) {
               const subSchema = fieldToZod(subField);
-              shape[subField.name] = isOptionalField(subField)
-                ? subSchema.optional()
-                : subSchema;
+              shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
             }
           }
           return z.object(shape);
@@ -269,9 +261,7 @@ function fieldToZod(field: Field): z.ZodTypeAny {
         const shape: Record<string, z.ZodTypeAny> = {};
         for (const subField of listField.fields) {
           const subSchema = fieldToZod(subField);
-          shape[subField.name] = isOptionalField(subField)
-            ? subSchema.optional()
-            : subSchema;
+          shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
         }
         return z.array(z.object(shape));
       }
@@ -375,14 +365,9 @@ function readCmsConfig(): CmsConfig {
  * Resolve a collection name to an `EntryCollection` from the CMS config.
  * Throws descriptive errors if the collection is not found or is not a folder-based collection.
  */
-function resolveCollection(
-  config: CmsConfig,
-  name: string,
-): EntryCollection {
+function resolveCollection(config: CmsConfig, name: string): EntryCollection {
   const collections = config.collections ?? [];
-  const match = collections.find(
-    (c) => "name" in c && c.name === name,
-  );
+  const match = collections.find((c) => "name" in c && c.name === name);
 
   if (!match) {
     const available = collections

@@ -97,9 +97,7 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
         if (collectionNames.length === 0) return;
 
         // Build a string literal union type: "posts" | "pages" | ...
-        const unionType = collectionNames
-          .map((n) => JSON.stringify(n))
-          .join(" | ");
+        const unionType = collectionNames.map((n) => JSON.stringify(n)).join(" | ");
 
         injectTypes({
           filename: "types.d.ts",

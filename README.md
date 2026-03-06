@@ -49,6 +49,7 @@ The configuration object is passed directly to `CMS.init()`.
 The `config.backend` property determines where your content is stored. Sveltia CMS supports various Git-based backends and a local development backend.
 
 ### GitHub
+
 ```js
 backend: {
   name: "github",
@@ -58,6 +59,7 @@ backend: {
 ```
 
 ### Gitea / Codeberg
+
 ```js
 backend: {
   name: "gitea",

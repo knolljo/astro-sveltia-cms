@@ -9,25 +9,25 @@
   "bugs": {
     "url": "https://github.com/joknoll/astro-sveltia-cms/issues"
   },
+  "license": "ISC",
+  "author": "Johannes Knoll",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joknoll/astro-sveltia-cms.git"
   },
-  "license": "ISC",
-  "author": "Johannes Knoll",
-  "type": "module",
-  "exports": {
-    ".": "./dist/index.js",
-    "./loader": "./dist/loader.js",
-    "./admin.astro": "./dist/admin.astro"
-  },
-  "main": "index.js",
   "directories": {
     "example": "example"
   },
   "files": [
     "dist"
   ],
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./loader": "./dist/loader.js",
+    "./admin.astro": "./dist/admin.astro"
+  },
   "scripts": {
     "build": "tsc && cp src/admin.astro dist/admin.astro",
     "dev": "tsc --watch"
@@ -38,6 +38,8 @@
   "devDependencies": {
     "@types/node": "^25.3.3",
     "astro": "^5.18.0",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {

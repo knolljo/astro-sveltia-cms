@@ -1,7 +1,7 @@
 {
   "name": "",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
+    "@joknoll/astro-sveltia-cms": "file:..",
     "@sveltia/cms": "^0.140.4",
     "astro": "^5.17.1",
-    "@joknoll/astro-sveltia-cms": "file:..",
     "typescript": "^5.9.3"
   }
 }
