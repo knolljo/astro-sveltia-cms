@@ -1,6 +1,6 @@
 {
   "name": "@joknoll/astro-sveltia-cms",
-  "version": "0.3.4",
+  "version": "0.3.3",
   "description": "Sveltia CMS integration for Astro",
   "keywords": [
     "astro-integration"
@@ -22,10 +22,16 @@
     "dist"
   ],
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/index.js",
-    "./loader": "./dist/loader.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.js"
+    },
     "./admin.astro": "./dist/admin.astro"
   },
   "scripts": {

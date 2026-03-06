@@ -56,6 +56,9 @@ interface VariantType {
 
 export function isOptionalField(field: Field): boolean {
   if (!("required" in field)) return false;
+  // `required` can be boolean or LocaleCode[].
+  // An empty locale array means "required in no locale", which is treated as optional.
+  if (Array.isArray(field.required)) return field.required.length === 0;
   return field.required === false;
 }
 
@@ -75,6 +78,7 @@ export function selectValuesToZod(values: SelectFieldValue[]): z.ZodTypeAny {
 
   const allStrings = values.every((v) => typeof v === "string");
   if (allStrings) {
+    if (values.length === 1) return z.literal(values[0] as string);
     return z.enum(values as [string, ...string[]]);
   }
 
@@ -144,6 +148,12 @@ function codeFieldToZod(field: Field): z.ZodTypeAny {
   return z.object({ [keys.code]: z.string(), [keys.lang]: z.string() });
 }
 
+/**
+ * Infers the Zod type for a `hidden` field from its `default` value's JS type.
+ * Falls back to `z.any()` when no default is provided, since a hidden field
+ * without a default has no statically known type. This is a best-effort
+ * approximation: it assumes the stored value always matches the default's type.
+ */
 function hiddenFieldToZod(field: Field): z.ZodTypeAny {
   const { default: defaultValue } = field as HiddenField;
   switch (typeof defaultValue) {

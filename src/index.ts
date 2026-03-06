@@ -32,6 +32,9 @@ function getEntryCollectionNames(config: CmsConfig): string[] {
 }
 
 function buildVirtualModuleSource(config: CmsConfig, title: string): string {
+  // JSON.stringify is safe here: the config is user-controlled and served as a
+  // JS module (not injected into an HTML script tag), so </script> sequences
+  // are not a concern. Any unusual Unicode is the user's responsibility.
   return `
     export const config = ${JSON.stringify(config)};
     export const title = ${JSON.stringify(title)};
@@ -39,14 +42,16 @@ function buildVirtualModuleSource(config: CmsConfig, title: string): string {
 }
 
 function buildTypeDeclaration(collectionNames: string[]): string {
+  if (collectionNames.length === 0) return "";
   const unionType = collectionNames.map((n) => JSON.stringify(n)).join(" | ");
   return `declare module "@joknoll/astro-sveltia-cms/loader" {
   import type { EntryCollection } from "@sveltia/cms";
+  import type { SveltiaLoader } from "@joknoll/astro-sveltia-cms/loader";
 
   type SveltiaCollectionName = ${unionType};
 
-  export function sveltiaLoader(name: SveltiaCollectionName): import("@joknoll/astro-sveltia-cms/loader").SveltiaLoader;
-  export function sveltiaLoader(collection: EntryCollection): import("@joknoll/astro-sveltia-cms/loader").SveltiaLoader;
+  export function sveltiaLoader(name: SveltiaCollectionName): SveltiaLoader;
+  export function sveltiaLoader(collection: EntryCollection): SveltiaLoader;
 }
 `;
 }
@@ -62,14 +67,20 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
       "astro:config:setup": ({ injectRoute, updateConfig, createCodegenDir, logger }) => {
         injectRoute({
           pattern: route,
-          entrypoint: new URL("./admin.astro", import.meta.url),
+          entrypoint: fileURLToPath(new URL("./admin.astro", import.meta.url)),
         });
 
         // Write config to .astro/integrations/astro-sveltia-cms/config.json so
         // the content loader can read it without a live Vite server.
         const codegenDir = createCodegenDir();
         const configPath = fileURLToPath(new URL("config.json", codegenDir));
-        writeFileSync(configPath, JSON.stringify(config));
+        try {
+          writeFileSync(configPath, JSON.stringify(config));
+        } catch (err) {
+          throw new Error(
+            `[astro-sveltia-cms] Failed to write CMS config to ${configPath}: ${String(err)}`,
+          );
+        }
 
         // Register the virtual module used by admin.astro at runtime.
         updateConfig({
