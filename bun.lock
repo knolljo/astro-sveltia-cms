@@ -5,10 +5,10 @@
     "": {
       "name": "@joknoll/astro-sveltia-cms",
       "dependencies": {
-        "@sveltia/cms": "^0.144.6",
+        "@sveltia/cms": "^0.145.0",
       },
       "devDependencies": {
-        "@types/node": "^25.3.3",
+        "@types/node": "^25.3.5",
         "astro": "^5.18.0",
         "oxfmt": "^0.36.0",
         "oxlint": "^1.51.0",
@@ -293,7 +293,7 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sveltia/cms": ["@sveltia/cms@0.144.6", "", {}, "sha512-oBVWcXQdW6QyhlKRsjL0f/wNyjKNLoTmtXvfTaaDRPfB2blWpYRAHXUt1ZftgwVo1nMFs7a13dyk5ZtzfnfIxg=="],
+    "@sveltia/cms": ["@sveltia/cms@0.145.0", "", {}, "sha512-XcvtZzb8emKMWivqOdbYMnfT4x2zindOfec6w7aag7T8jcKdFUhu+SqJ4+ebwxfNTOq5yn/Y9Yetj53yjTPT5w=="],
 
     "@types/chai": ["@types/chai@5.2.3", "", { "dependencies": { "@types/deep-eql": "*", "assertion-error": "^2.0.1" } }, "sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA=="],
 
@@ -311,7 +311,7 @@
 
     "@types/nlcst": ["@types/nlcst@2.0.3", "", { "dependencies": { "@types/unist": "*" } }, "sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA=="],
 
-    "@types/node": ["@types/node@25.3.3", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ=="],
+    "@types/node": ["@types/node@25.3.5", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-oX8xrhvpiyRCQkG1MFchB09f+cXftgIXb3a7UUa4Y3wpmZPw5tyZGTLWhlESOLq1Rq6oDlc8npVU2/9xiCuXMA=="],
 
     "@types/unist": ["@types/unist@3.0.3", "", {}, "sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q=="],
 
