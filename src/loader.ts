@@ -32,11 +32,7 @@ export type SveltiaConfig = CmsConfig;
  * The default format (undefined) is yaml-frontmatter, so undefined is treated
  * as a frontmatter format.
  */
-const FRONTMATTER_FORMATS = new Set([
-  "yaml-frontmatter",
-  "toml-frontmatter",
-  "json-frontmatter",
-]);
+const FRONTMATTER_FORMATS = new Set(["yaml-frontmatter", "toml-frontmatter", "json-frontmatter"]);
 
 function isFrontmatterFormat(format: string | undefined): boolean {
   return !format || FRONTMATTER_FORMATS.has(format);
@@ -79,7 +75,9 @@ export function sveltiaLoader(collectionOrName: string | EntryCollection): Svelt
 
     schema: () => {
       const collection = getCachedCollection(name);
-      return sveltiaSchema(collection.fields, { excludeBody: isFrontmatterFormat(collection.format) });
+      return sveltiaSchema(collection.fields, {
+        excludeBody: isFrontmatterFormat(collection.format),
+      });
     },
 
     load: async (context) => {

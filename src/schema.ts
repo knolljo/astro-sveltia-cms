@@ -94,10 +94,7 @@ export function selectValuesToZod(values: SelectFieldValue[]): z.ZodTypeAny {
 
 type ZodObjectShape = z.ZodObject<Record<string, z.ZodTypeAny>>;
 
-function buildVariantSchemas(
-  variants: VariantType[],
-  typeKey: string,
-): ZodObjectShape[] {
+function buildVariantSchemas(variants: VariantType[], typeKey: string): ZodObjectShape[] {
   return variants.map((variant) => {
     const shape: Record<string, z.ZodTypeAny> = {
       [typeKey]: z.literal(variant.name),
@@ -110,10 +107,7 @@ function buildVariantSchemas(
   });
 }
 
-function variantsToDiscriminatedUnion(
-  variants: VariantType[],
-  typeKey: string,
-): z.ZodTypeAny {
+function variantsToDiscriminatedUnion(variants: VariantType[], typeKey: string): z.ZodTypeAny {
   const schemas = buildVariantSchemas(variants, typeKey);
   if (schemas.length === 0) return z.object({});
   if (schemas.length === 1) return schemas[0];
