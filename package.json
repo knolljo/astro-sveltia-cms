@@ -3,7 +3,10 @@
   "version": "0.1.2",
   "description": "Sveltia CMS integration for Astro",
   "keywords": [
-    "astro-integration"
+    "withastro",
+    "astro-integration",
+    "astro-loader",
+    "sveltiacms"
   ],
   "homepage": "https://github.com/joknoll/astro-sveltiacms#readme",
   "bugs": {
