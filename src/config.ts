@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import type { CmsConfig, EntryCollection, FileCollection } from "@sveltia/cms";
 
-const CONFIG_PATH = ".astro/integrations/astro-sveltiacms/config.json";
+const CONFIG_PATH = ".astro/integrations/astro-loader-sveltia-cms/config.json";
 
 export function readCmsConfig(): CmsConfig {
   const configPath = `${process.cwd()}/${CONFIG_PATH}`;
@@ -19,7 +19,7 @@ export function readCmsConfig(): CmsConfig {
     if (err instanceof Error && err.message.startsWith("[sveltiaLoader]")) throw err;
     throw new Error(
       `[sveltiaLoader] Could not read CMS config from ${configPath}. ` +
-        `Make sure the astro-sveltiacms integration is added to your astro.config.mjs.`,
+        `Make sure the astro-loader-sveltia-cms integration is added to your astro.config.mjs.`,
     );
   }
 }

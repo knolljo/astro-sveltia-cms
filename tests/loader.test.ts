@@ -84,7 +84,7 @@ describe("readCmsConfig", () => {
   });
 
   it("error message includes the config path hint", () => {
-    expect(() => readCmsConfig()).toThrowError(/astro-sveltiacms/);
+    expect(() => readCmsConfig()).toThrowError(/astro-loader-sveltia-cms/);
   });
 
   it("error message tells user to add the integration", () => {

@@ -14,9 +14,9 @@ const minimalConfig: CmsConfig = {
 };
 
 describe("sveltiaCms — return shape", () => {
-  it('returns an integration named "astro-sveltiacms"', () => {
+  it('returns an integration named "astro-loader-sveltia-cms"', () => {
     const integration = sveltiaCms({ config: minimalConfig });
-    expect(integration.name).toBe("astro-sveltiacms");
+    expect(integration.name).toBe("astro-loader-sveltia-cms");
   });
 
   it("returns an object with a hooks property", () => {

@@ -1,22 +1,22 @@
 {
-  "name": "astro-sveltiacms",
+  "name": "astro-loader-sveltia-cms",
   "version": "0.1.2",
   "description": "Sveltia CMS integration for Astro",
   "keywords": [
-    "withastro",
     "astro-integration",
     "astro-loader",
-    "sveltiacms"
+    "sveltiacms",
+    "withastro"
   ],
-  "homepage": "https://github.com/joknoll/astro-sveltiacms#readme",
+  "homepage": "https://github.com/joknoll/astro-loader-sveltia-cms#readme",
   "bugs": {
-    "url": "https://github.com/joknoll/astro-sveltiacms/issues"
+    "url": "https://github.com/joknoll/astro-loader-sveltia-cms/issues"
   },
   "license": "ISC",
   "author": "Johannes Knoll",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joknoll/astro-sveltiacms.git"
+    "url": "git+https://github.com/joknoll/astro-loader-sveltia-cms.git"
   },
   "directories": {
     "example": "example"

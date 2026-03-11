@@ -18,7 +18,11 @@ _.file = "./.env.local"
 
 [tasks.clean]
 description = "Clean project"
-run = ["rm -rf node_modules dist example/node_modules"]
+run = ["rm -rf node_modules dist example/node_modules", "rm bun.lock example/bun.lock"]
+
+[tasks.setup]
+description = "Setup project"
+run = ["bun i", "bun run build", "cd example && bun i"]
 
 [tasks."release:version"]
 description = "Bump package version and create a git tag."

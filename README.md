@@ -1,16 +1,15 @@
-# astro-sveltiacms
+# astro-loader-sveltia-cms
 
 Sveltia CMS integration for Astro 6.
-Serves the [Sveltia CMS](https://sveltiacms.app) admin UI
-and provides a content loader for Astro's content collections,
-including automatic Zod schema generation derived fromt the CMS field definitions.
+This serves the [Sveltia CMS](https://sveltiacms.app) admin UI and provides a
+**content loader** for Astro's content collections, including automatic Zod schema generation.
 
 ## Installation
 
 ```bash
-npm install astro-sveltiacms
+npm install astro-loader-sveltia-cms
 # or
-bun add astro-sveltiacms
+bun add astro-loader-sveltia-cms
 ```
 
 ## Quick Start
@@ -19,7 +18,7 @@ Register the integration in **`astro.config.mjs`**:
 
 ```js
 import { defineConfig } from "astro/config";
-import sveltia from "astro-sveltiacms";
+import sveltia from "astro-loader-sveltia-cms";
 
 export default defineConfig({
   integrations: [
@@ -53,7 +52,7 @@ Use the content loader in **`src/content.config.ts`**:
 
 ```ts
 import { defineCollection } from "astro:content";
-import { sveltiaLoader } from "astro-sveltiacms/loader";
+import { sveltiaLoader } from "astro-loader-sveltia-cms/loader";
 
 const posts = defineCollection({
   loader: sveltiaLoader("posts"),
