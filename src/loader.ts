@@ -32,11 +32,7 @@ export type SveltiaConfig = CmsConfig;
  * The default format (undefined) is yaml-frontmatter, so undefined is treated
  * as a frontmatter format.
  */
-const FRONTMATTER_FORMATS = new Set([
-  "yaml-frontmatter",
-  "toml-frontmatter",
-  "json-frontmatter",
-]);
+const FRONTMATTER_FORMATS = new Set(["yaml-frontmatter", "toml-frontmatter", "json-frontmatter"]);
 
 function isFrontmatterFormat(format: string | undefined): boolean {
   return !format || FRONTMATTER_FORMATS.has(format);
@@ -67,9 +63,7 @@ function getCachedCollection(name: string): EntryCollection {
   return collection;
 }
 
-export function sveltiaLoader(
-  collectionOrName: string | EntryCollection,
-): SveltiaLoader {
+export function sveltiaLoader(collectionOrName: string | EntryCollection): SveltiaLoader {
   if (typeof collectionOrName !== "string") {
     return loaderFromCollection(collectionOrName);
   }

@@ -28,9 +28,7 @@ function isEntryCollection(c: unknown): c is EntryCollection {
 }
 
 function getEntryCollectionNames(config: CmsConfig): string[] {
-  return (config.collections ?? [])
-    .filter(isEntryCollection)
-    .map((c) => c.name);
+  return (config.collections ?? []).filter(isEntryCollection).map((c) => c.name);
 }
 
 function buildVirtualModuleSource(config: CmsConfig, title: string): string {
@@ -66,12 +64,7 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
   return {
     name: "astro-sveltiacms",
     hooks: {
-      "astro:config:setup": ({
-        injectRoute,
-        updateConfig,
-        createCodegenDir,
-        logger,
-      }) => {
+      "astro:config:setup": ({ injectRoute, updateConfig, createCodegenDir, logger }) => {
         injectRoute({
           pattern: route,
           entrypoint: fileURLToPath(new URL("./admin.astro", import.meta.url)),
@@ -96,8 +89,7 @@ export default function sveltiaCms(options: SveltiaOptions): AstroIntegration {
               {
                 name: "vite-plugin-astro-sveltiacms-config",
                 resolveId(id) {
-                  if (id === VIRTUAL_MODULE_ID)
-                    return RESOLVED_VIRTUAL_MODULE_ID;
+                  if (id === VIRTUAL_MODULE_ID) return RESOLVED_VIRTUAL_MODULE_ID;
                 },
                 load(id) {
                   if (id === RESOLVED_VIRTUAL_MODULE_ID) {

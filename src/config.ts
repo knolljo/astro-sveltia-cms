@@ -16,8 +16,7 @@ export function readCmsConfig(): CmsConfig {
     }
     return parsed as CmsConfig;
   } catch (err) {
-    if (err instanceof Error && err.message.startsWith("[sveltiaLoader]"))
-      throw err;
+    if (err instanceof Error && err.message.startsWith("[sveltiaLoader]")) throw err;
     throw new Error(
       `[sveltiaLoader] Could not read CMS config from ${configPath}. ` +
         `Make sure the astro-sveltiacms integration is added to your astro.config.mjs.`,
@@ -25,10 +24,7 @@ export function readCmsConfig(): CmsConfig {
   }
 }
 
-export function resolveCollection(
-  config: CmsConfig,
-  name: string,
-): EntryCollection {
+export function resolveCollection(config: CmsConfig, name: string): EntryCollection {
   const collections = config.collections ?? [];
   // Phase 1: find any named collection (EntryCollection or FileCollection).
   const match = collections.find((c) => "name" in c && c.name === name);

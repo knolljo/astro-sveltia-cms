@@ -15,9 +15,7 @@ function accepts(schema: z.ZodType, value: unknown): void {
 function rejects(schema: z.ZodType, value: unknown): void {
   const result = schema.safeParse(value);
   if (result.success) {
-    throw new Error(
-      `Expected schema to reject ${JSON.stringify(value)}, but it was accepted`,
-    );
+    throw new Error(`Expected schema to reject ${JSON.stringify(value)}, but it was accepted`);
   }
 }
 
@@ -62,10 +60,7 @@ describe('fieldToZod — widget: "map"', () => {
 
 describe('fieldToZod — widget: "uuid"', () => {
   it("accepts a uuid string", () => {
-    accepts(
-      fieldToZod({ name: "id", widget: "uuid" }),
-      "123e4567-e89b-12d3-a456-426614174000",
-    );
+    accepts(fieldToZod({ name: "id", widget: "uuid" }), "123e4567-e89b-12d3-a456-426614174000");
   });
   it("rejects a number", () => {
     rejects(fieldToZod({ name: "id", widget: "uuid" }), 123);
@@ -74,25 +69,16 @@ describe('fieldToZod — widget: "uuid"', () => {
 
 describe('fieldToZod — widget: "compute"', () => {
   it("accepts a string", () => {
-    accepts(
-      fieldToZod({ name: "slug", widget: "compute", value: "{{title}}" }),
-      "my-post",
-    );
+    accepts(fieldToZod({ name: "slug", widget: "compute", value: "{{title}}" }), "my-post");
   });
   it("rejects an array", () => {
-    rejects(
-      fieldToZod({ name: "slug", widget: "compute", value: "{{title}}" }),
-      ["a"],
-    );
+    rejects(fieldToZod({ name: "slug", widget: "compute", value: "{{title}}" }), ["a"]);
   });
 });
 
 describe('fieldToZod — widget: "markdown"', () => {
   it("accepts a markdown string", () => {
-    accepts(
-      fieldToZod({ name: "content", widget: "markdown" }),
-      "# Hello\nWorld",
-    );
+    accepts(fieldToZod({ name: "content", widget: "markdown" }), "# Hello\nWorld");
   });
   it("rejects a number", () => {
     rejects(fieldToZod({ name: "content", widget: "markdown" }), 99);
@@ -214,17 +200,11 @@ describe('fieldToZod — widget: "image"', () => {
     accepts(s, []);
   });
   it("rejects a string when multiple: true", () => {
-    rejects(
-      fieldToZod({ name: "img", widget: "image", multiple: true }),
-      "/a.jpg",
-    );
+    rejects(fieldToZod({ name: "img", widget: "image", multiple: true }), "/a.jpg");
   });
 
   it("accepts a single string when multiple: false (explicit)", () => {
-    accepts(
-      fieldToZod({ name: "img", widget: "image", multiple: false }),
-      "/a.jpg",
-    );
+    accepts(fieldToZod({ name: "img", widget: "image", multiple: false }), "/a.jpg");
   });
 });
 

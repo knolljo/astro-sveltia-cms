@@ -68,9 +68,7 @@ export function getSelectValues(
   if (options.length === 0) return [];
   const first = options[0];
   if (typeof first === "object" && first !== null && "value" in first) {
-    return (options as { label: string; value: SelectFieldValue }[]).map(
-      (o) => o.value,
-    );
+    return (options as { label: string; value: SelectFieldValue }[]).map((o) => o.value);
   }
   return options as SelectFieldValue[];
 }
@@ -96,35 +94,24 @@ export function selectValuesToZod(values: SelectFieldValue[]): z.ZodType {
 
 type ZodObjectShape = z.ZodObject<Record<string, z.ZodType>>;
 
-function buildVariantSchemas(
-  variants: VariantType[],
-  typeKey: string,
-): ZodObjectShape[] {
+function buildVariantSchemas(variants: VariantType[], typeKey: string): ZodObjectShape[] {
   return variants.map((variant) => {
     const shape: Record<string, z.ZodType> = {
       [typeKey]: z.literal(variant.name),
     };
     for (const subField of variant.fields ?? []) {
       const subSchema = fieldToZod(subField);
-      shape[subField.name] = isOptionalField(subField)
-        ? subSchema.optional()
-        : subSchema;
+      shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
     }
     return z.object(shape);
   });
 }
 
-function variantsToDiscriminatedUnion(
-  variants: VariantType[],
-  typeKey: string,
-): z.ZodType {
+function variantsToDiscriminatedUnion(variants: VariantType[], typeKey: string): z.ZodType {
   const schemas = buildVariantSchemas(variants, typeKey);
   if (schemas.length === 0) return z.object({});
   if (schemas.length === 1) return schemas[0];
-  return z.discriminatedUnion(
-    typeKey,
-    schemas as [ZodObjectShape, ...ZodObjectShape[]],
-  );
+  return z.discriminatedUnion(typeKey, schemas as [ZodObjectShape, ...ZodObjectShape[]]);
 }
 
 function numberFieldToZod(field: Field): z.ZodType {
@@ -147,8 +134,7 @@ function selectFieldToZod(field: Field): z.ZodType {
 }
 
 function codeFieldToZod(field: Field): z.ZodType {
-  const { output_code_only, keys = { code: "code", lang: "lang" } } =
-    field as CodeField;
+  const { output_code_only, keys = { code: "code", lang: "lang" } } = field as CodeField;
   if (output_code_only) return z.string();
   return z.object({ [keys.code]: z.string(), [keys.lang]: z.string() });
 }
@@ -184,9 +170,7 @@ function objectFieldToZod(field: Field): z.ZodType {
     const shape: Record<string, z.ZodType> = {};
     for (const subField of fields) {
       const subSchema = fieldToZod(subField);
-      shape[subField.name] = isOptionalField(subField)
-        ? subSchema.optional()
-        : subSchema;
+      shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
     }
     return z.object(shape);
   }
@@ -195,12 +179,7 @@ function objectFieldToZod(field: Field): z.ZodType {
 }
 
 function listFieldToZod(field: Field): z.ZodType {
-  const {
-    field: singleField,
-    fields,
-    types,
-    typeKey = "type",
-  } = field as ListField;
+  const { field: singleField, fields, types, typeKey = "type" } = field as ListField;
 
   if (types) {
     if (types.length === 0) return z.array(z.any());
@@ -211,9 +190,7 @@ function listFieldToZod(field: Field): z.ZodType {
     const shape: Record<string, z.ZodType> = {};
     for (const subField of fields) {
       const subSchema = fieldToZod(subField);
-      shape[subField.name] = isOptionalField(subField)
-        ? subSchema.optional()
-        : subSchema;
+      shape[subField.name] = isOptionalField(subField) ? subSchema.optional() : subSchema;
     }
     return z.array(z.object(shape));
   }

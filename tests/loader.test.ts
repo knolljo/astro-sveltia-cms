@@ -1,9 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  readCmsConfig,
-  resolveCollection,
-  sveltiaLoader,
-} from "../src/loader.ts";
+import { readCmsConfig, resolveCollection, sveltiaLoader } from "../src/loader.ts";
 import type { CmsConfig, EntryCollection } from "@sveltia/cms";
 
 describe("resolveCollection", () => {
@@ -44,9 +40,7 @@ describe("resolveCollection", () => {
   });
 
   it("includes available collection names in error message", () => {
-    expect(() => resolveCollection(config, "unknown")).toThrowError(
-      /posts.*pages|pages.*posts/,
-    );
+    expect(() => resolveCollection(config, "unknown")).toThrowError(/posts.*pages|pages.*posts/);
   });
 
   it("throws with '(none)' message when collections array is empty", () => {
@@ -54,9 +48,7 @@ describe("resolveCollection", () => {
       backend: { name: "test-repo" },
       collections: [],
     };
-    expect(() => resolveCollection(emptyConfig, "posts")).toThrowError(
-      /\(none\)/,
-    );
+    expect(() => resolveCollection(emptyConfig, "posts")).toThrowError(/\(none\)/);
   });
 
   it("throws when collections is undefined", () => {
@@ -131,9 +123,7 @@ describe("sveltiaLoader — object form", () => {
     const schema = loader.schema as {
       safeParse: (v: unknown) => { success: boolean };
     };
-    expect(
-      schema.safeParse({ title: "Hello", date: "2024-01-01" }).success,
-    ).toBe(true);
+    expect(schema.safeParse({ title: "Hello", date: "2024-01-01" }).success).toBe(true);
     expect(schema.safeParse({ date: "2024-01-01" }).success).toBe(false); // missing title
   });
 
@@ -202,16 +192,12 @@ describe("sveltiaLoader — string form", () => {
   it("schema() throws when config file is missing (no integration setup)", () => {
     const loader = sveltiaLoader("posts");
     if (typeof loader.schema === "function") {
-      expect(() => (loader.schema as () => unknown)()).toThrowError(
-        /Could not read CMS config/,
-      );
+      expect(() => (loader.schema as () => unknown)()).toThrowError(/Could not read CMS config/);
     }
   });
 
   it("load() throws when config file is missing (no integration setup)", async () => {
     const loader = sveltiaLoader("posts");
-    await expect(loader.load({} as never)).rejects.toThrowError(
-      /Could not read CMS config/,
-    );
+    await expect(loader.load({} as never)).rejects.toThrowError(/Could not read CMS config/);
   });
 });

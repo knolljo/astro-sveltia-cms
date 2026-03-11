@@ -44,15 +44,11 @@ describe("sveltiaCms — options handling", () => {
   });
 
   it("accepts a custom route", () => {
-    expect(() =>
-      sveltiaCms({ config: minimalConfig, route: "/cms" }),
-    ).not.toThrow();
+    expect(() => sveltiaCms({ config: minimalConfig, route: "/cms" })).not.toThrow();
   });
 
   it("accepts a custom title", () => {
-    expect(() =>
-      sveltiaCms({ config: minimalConfig, title: "My CMS" }),
-    ).not.toThrow();
+    expect(() => sveltiaCms({ config: minimalConfig, title: "My CMS" })).not.toThrow();
   });
 
   it("accepts all options together", () => {

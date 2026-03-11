@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
-    "astro-sveltiacms": "file:..",
     "@sveltia/cms": "^0.140.4",
     "astro": "^5.17.1",
+    "astro-sveltiacms": "file:..",
     "typescript": "^5.9.3"
   }
 }
