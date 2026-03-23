@@ -47,18 +47,18 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@sveltia/cms": "^0.146.10",
+    "@sveltia/cms": "^0.149.0",
     "zod-to-ts": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
-    "astro": "^6.0.2",
-    "oxfmt": "^0.38.0",
-    "oxlint": "^1.51.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "@types/node": "^25.5.0",
+    "astro": "^6.0.8",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1"
   },
   "peerDependencies": {
-    "astro": "^6.0.2"
+    "astro": "^6.0.8"
   }
 }
