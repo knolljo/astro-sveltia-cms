@@ -1,6 +1,6 @@
 {
   "name": "astro-loader-sveltia-cms",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Sveltia CMS integration for Astro",
   "keywords": [
     "astro-integration",
