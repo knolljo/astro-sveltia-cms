@@ -5,7 +5,7 @@
     "": {
       "name": "astro-loader-sveltia-cms",
       "dependencies": {
-        "@sveltia/cms": "^0.146.2",
+        "@sveltia/cms": "^0.146.10",
         "zod-to-ts": "^2.0.0",
       },
       "devDependencies": {
@@ -300,7 +300,7 @@
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
-    "@sveltia/cms": ["@sveltia/cms@0.146.2", "", {}, "sha512-/oScCRFxBMZLqDGIjq7UokFAWe+EcowQH5iyAhwFbblQQRDF0zBqqObUjSH1VUPRDB9xC6gjb/Uq9hbd6JW+Aw=="],
+    "@sveltia/cms": ["@sveltia/cms@0.146.10", "", {}, "sha512-6JS982m9tcSztsHoz6506SI+BMDn8nk/aiCLxd5c8nx33cqslSz3djg15KwtbIE8AeTF9RpnDx78TXR+NYD5gw=="],
 
     "@types/chai": ["@types/chai@5.2.3", "", { "dependencies": { "@types/deep-eql": "*", "assertion-error": "^2.0.1" } }, "sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA=="],
 
