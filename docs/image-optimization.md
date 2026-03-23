@@ -43,12 +43,12 @@ Astro detects image fields at build/load time by scanning stored entry data for 
 ```typescript
 // wrapContextForImages replaces context.parseData before delegating to the inner glob loader
 context.parseData = (opts) => {
-  const transformed = prefixImageFields(opts.data, collection.fields);
+  const transformed = transformFieldValues(opts.data, collection.fields);
   return originalParseData({ ...opts, data: transformed });
 };
 ```
 
-`prefixImageFields` walks the raw frontmatter data guided by the CMS field definitions. When it finds an image field value like `../../assets/image.webp`, it transforms it to `__ASTRO_IMAGE_../../assets/image.webp` before the data reaches Astro's store.
+`transformFieldValues` walks the raw frontmatter data guided by the CMS field definitions. When it finds an image field value like `../../assets/image.webp`, it transforms it to `__ASTRO_IMAGE_../../assets/image.webp` before the data reaches Astro's store.
 
 Astro's pipeline then handles the rest automatically:
 

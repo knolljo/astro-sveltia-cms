@@ -1,6 +1,6 @@
 import type { Field } from "@sveltia/cms";
 import { getWidget, isBodyField } from "./field-types.js";
-import type { MultipleField, ObjectField, ListField } from "./field-types.js";
+import type { MultipleField, ObjectField, ListField, RelationField } from "./field-types.js";
 
 export const IMAGE_IMPORT_PREFIX = "__ASTRO_IMAGE_";
 
@@ -30,7 +30,21 @@ function prefixImageValue(value: unknown, field: Field): unknown {
   return value;
 }
 
-export function prefixImageFields(
+function transformRelationValue(
+  value: unknown,
+  collection: string,
+  isMultiple: boolean | undefined,
+): unknown {
+  if (isMultiple && Array.isArray(value)) {
+    return value.map((v) => (typeof v === "string" && v ? { collection, id: v } : v));
+  }
+  if (typeof value === "string" && value) {
+    return { collection, id: value };
+  }
+  return value;
+}
+
+export function transformFieldValues(
   data: Record<string, unknown>,
   fields: Field[],
   excludeBody: boolean,
@@ -45,6 +59,9 @@ export function prefixImageFields(
 
     if (widget === "image") {
       result[field.name] = prefixImageValue(result[field.name], field);
+    } else if (widget === "relation") {
+      const { collection, multiple } = field as RelationField;
+      result[field.name] = transformRelationValue(result[field.name], collection, multiple);
     } else if (widget === "object") {
       const { fields: subFields, types, typeKey = "type" } = field as ObjectField;
       const obj = result[field.name];
@@ -52,14 +69,14 @@ export function prefixImageFields(
         if (types) {
           const variant = types.find((t) => t.name === (obj as Record<string, unknown>)[typeKey]);
           if (variant?.fields) {
-            result[field.name] = prefixImageFields(
+            result[field.name] = transformFieldValues(
               obj as Record<string, unknown>,
               variant.fields,
               false,
             );
           }
         } else if (subFields) {
-          result[field.name] = prefixImageFields(obj as Record<string, unknown>, subFields, false);
+          result[field.name] = transformFieldValues(obj as Record<string, unknown>, subFields, false);
         }
       }
     } else if (widget === "list") {
@@ -73,18 +90,23 @@ export function prefixImageFields(
               (t) => t.name === (item as Record<string, unknown>)[typeKey],
             );
             return variant?.fields
-              ? prefixImageFields(item as Record<string, unknown>, variant.fields, false)
+              ? transformFieldValues(item as Record<string, unknown>, variant.fields, false)
               : item;
           });
         } else if (subFields) {
           result[field.name] = arr.map((item) =>
             typeof item === "object" && item !== null
-              ? prefixImageFields(item as Record<string, unknown>, subFields, false)
+              ? transformFieldValues(item as Record<string, unknown>, subFields, false)
               : item,
           );
         } else if (singleField) {
           if (getWidget(singleField) === "image") {
             result[field.name] = arr.map((v) => prefixImageValue(v, singleField));
+          } else if (getWidget(singleField) === "relation") {
+            const { collection, multiple } = singleField as RelationField;
+            // The list handler already unwrapped the array, so the full array is passed
+            // to transformRelationValue — default to multiple so it maps over elements.
+            result[field.name] = transformRelationValue(arr, collection, multiple ?? true);
           }
         }
       }

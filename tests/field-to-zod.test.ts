@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { z } from "astro/zod";
 import { fieldToZod } from "../src/loader.ts";
 import type { Field } from "@sveltia/cms";
+import type { SchemaContext } from "../src/schema.ts";
 
 function accepts(schema: z.ZodType, value: unknown): void {
   const result = schema.safeParse(value);
@@ -326,25 +327,31 @@ describe('fieldToZod — widget: "select"', () => {
 });
 
 describe('fieldToZod — widget: "relation"', () => {
-  it("single → z.string()", () => {
-    const s = fieldToZod({
-      name: "r",
-      widget: "relation",
-      collection: "authors",
-    });
-    accepts(s, "some-slug");
+  // Relation fields are pre-transformed to {collection, id} objects by the
+  // loader before parseData runs, so the schema validates objects, not strings.
+
+  it("single → z.object({ collection, id })", () => {
+    const s = fieldToZod({ name: "r", widget: "relation", collection: "authors" });
+    accepts(s, { collection: "authors", id: "some-slug" });
+    rejects(s, "some-slug");
     rejects(s, 42);
   });
 
-  it("multiple → z.array(z.string())", () => {
-    const s = fieldToZod({
-      name: "r",
-      widget: "relation",
-      collection: "tags",
-      multiple: true,
-    });
-    accepts(s, ["tag-a", "tag-b"]);
-    rejects(s, "single");
+  it("multiple → z.array(z.object({ collection, id }))", () => {
+    const s = fieldToZod({ name: "r", widget: "relation", collection: "tags", multiple: true });
+    accepts(s, [
+      { collection: "tags", id: "tag-a" },
+      { collection: "tags", id: "tag-b" },
+    ]);
+    rejects(s, ["tag-a", "tag-b"]);
+  });
+
+  it("records the collection name in ctx.relationSchemas", () => {
+    const ctx: SchemaContext = { imageSchemas: [], relationSchemas: new Map() };
+    const s = fieldToZod({ name: "r", widget: "relation", collection: "authors" }, ctx);
+    expect(ctx.relationSchemas.size).toBe(1);
+    expect([...ctx.relationSchemas.values()][0]).toBe("authors");
+    expect([...ctx.relationSchemas.keys()][0]).toBe(s);
   });
 });
 

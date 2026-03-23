@@ -338,3 +338,102 @@ describe("image prefix — non-image fields are not modified", () => {
     expect(result.cover).toBe("__ASTRO_IMAGE_./photo.jpg");
   });
 });
+
+// ─── createSchema — relation field TypeScript types ───────────────────────
+
+describe("createSchema — relation field TypeScript types", () => {
+  it("types a single relation field as { collection: '...'; id: string }", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "author", widget: "relation", collection: "members" }],
+    };
+    const { types } = await sveltiaLoader(collection).createSchema!();
+    expect(types).toMatch(/author\s*:\s*\{/);
+    expect(types).toContain('"members"');
+    expect(types).toContain("string");
+  });
+
+  it("types an optional relation field with ?", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "related", widget: "relation", collection: "releases", required: false }],
+    };
+    const { types } = await sveltiaLoader(collection).createSchema!();
+    expect(types).toMatch(/related\?/);
+    expect(types).toContain('"releases"');
+  });
+
+  it("types a multiple relation field as an array", async () => {
+    const collection: EntryCollection = {
+      name: "tracks",
+      folder: "src/content/tracks",
+      fields: [{ name: "guests", widget: "relation", collection: "guests", multiple: true } as never],
+    };
+    const { types } = await sveltiaLoader(collection).createSchema!();
+    expect(types).toMatch(/guests\s*:/);
+    expect(types).toContain('"guests"');
+    // array type: should contain [] somewhere after the field
+    expect(types).toMatch(/\[\]/);
+  });
+
+  it("does not add ImageMetadata import for a relation-only collection", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "author", widget: "relation", collection: "members" }],
+    };
+    const { types } = await sveltiaLoader(collection).createSchema!();
+    expect(types).not.toContain("ImageMetadata");
+  });
+});
+
+// ─── relation field data transformation ───────────────────────────────────
+
+describe("relation field — data transformation", () => {
+  it("converts a single relation slug to { collection, id }", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "author", widget: "relation", collection: "members" }],
+    };
+    const result = await transformData(collection, { author: "jane-doe" });
+    expect(result.author).toEqual({ collection: "members", id: "jane-doe" });
+  });
+
+  it("converts a multiple relation to an array of { collection, id } objects", async () => {
+    const collection: EntryCollection = {
+      name: "tracks",
+      folder: "src/content/tracks",
+      fields: [{ name: "guests", widget: "relation", collection: "guests", multiple: true } as never],
+    };
+    const result = await transformData(collection, { guests: ["alice", "bob"] });
+    expect(result.guests).toEqual([
+      { collection: "guests", id: "alice" },
+      { collection: "guests", id: "bob" },
+    ]);
+  });
+
+  it("leaves null/missing relation values untouched", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "author", widget: "relation", collection: "members", required: false }],
+    };
+    const result = await transformData(collection, { title: "No author" });
+    expect(result).not.toHaveProperty("author");
+  });
+
+  it("leaves an already-transformed { collection, id } object untouched", async () => {
+    const collection: EntryCollection = {
+      name: "articles",
+      folder: "src/content/articles",
+      fields: [{ name: "author", widget: "relation", collection: "members" }],
+    };
+    const alreadyTransformed = { collection: "members", id: "jane-doe" };
+    const result = await transformData(collection, { author: alreadyTransformed });
+    // Non-string values pass through unchanged
+    expect(result.author).toEqual(alreadyTransformed);
+  });
+});

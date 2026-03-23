@@ -3,7 +3,7 @@ import type { Loader, LoaderContext } from "astro/loaders";
 import type { CmsConfig, EntryCollection, Field } from "@sveltia/cms";
 import { readCmsConfig, resolveCollection } from "./config.js";
 import { frontmatterFormats } from "./schema.js";
-import { prefixImageFields } from "./images.js";
+import { transformFieldValues } from "./transforms.js";
 import { buildCollectionSchema } from "./type-gen.js";
 
 export { readCmsConfig, resolveCollection } from "./config.js";
@@ -34,7 +34,7 @@ function getCachedCollection(name: string): EntryCollection {
   return collection;
 }
 
-function wrapContextForImages(context: LoaderContext, collection: EntryCollection): LoaderContext {
+function wrapContextWithTransforms(context: LoaderContext, collection: EntryCollection): LoaderContext {
   const excludeBody = frontmatterFormats.has(collection.format);
   return {
     ...context,
@@ -43,7 +43,7 @@ function wrapContextForImages(context: LoaderContext, collection: EntryCollectio
       data: TData;
       filePath?: string;
     }) => {
-      const transformed = prefixImageFields(
+      const transformed = transformFieldValues(
         opts.data as Record<string, unknown>,
         collection.fields,
         excludeBody,
@@ -66,7 +66,7 @@ export function sveltiaLoader(collectionOrName: string | EntryCollection): Loade
       const collection = getCollection();
       const extension = collection.extension ?? "md";
       return glob({ pattern: `**/*.${extension}`, base: collection.folder }).load(
-        wrapContextForImages(context, collection),
+        wrapContextWithTransforms(context, collection),
       );
     },
   } satisfies Loader;

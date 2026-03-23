@@ -30,6 +30,10 @@ export interface ObjectField {
   typeKey?: string;
 }
 
+export interface RelationField extends MultipleField {
+  collection: string;
+}
+
 export interface ListField {
   field?: Field;
   fields?: Field[];

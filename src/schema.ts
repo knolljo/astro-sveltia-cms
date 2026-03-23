@@ -5,6 +5,7 @@ import {
   isBodyField,
   type NumberField,
   type MultipleField,
+  type RelationField,
   type SelectField,
   type CodeField,
   type HiddenField,
@@ -16,6 +17,8 @@ import {
 export type SchemaContext = {
   image?: ImageFunction;
   imageSchemas: z.ZodType[];
+  /** Maps each relation Zod schema instance to its target collection name. */
+  relationSchemas: Map<z.ZodType, string>;
 };
 
 /**
@@ -110,6 +113,22 @@ function imageFieldToZod(field: Field, ctx?: SchemaContext): z.ZodType {
 
 function fileFieldToZod(field: Field): z.ZodType {
   return (field as MultipleField).multiple ? z.array(z.string()) : z.string();
+}
+
+/**
+ * Relation fields are stored as slug strings in frontmatter. The loader
+ * pre-transforms them to `{ collection, id }` objects before parseData runs
+ * (see transformFieldValues in transforms.ts), so the runtime schema validates
+ * objects rather than strings.
+ *
+ * The TypeScript type is overridden in type-gen.ts to use the specific
+ * collection literal: `{ collection: "members"; id: string }`.
+ */
+function relationFieldToZod(field: Field, ctx?: SchemaContext): z.ZodType {
+  const { collection, multiple } = field as RelationField;
+  const refSchema = z.object({ collection: z.literal(collection), id: z.string() });
+  if (ctx) ctx.relationSchemas.set(refSchema, collection);
+  return multiple ? z.array(refSchema) : refSchema;
 }
 
 function selectFieldToZod(field: Field): z.ZodType {
@@ -219,7 +238,7 @@ export function fieldToZod(field: Field, ctx?: SchemaContext): z.ZodType {
       return selectFieldToZod(field);
 
     case "relation":
-      return fileFieldToZod(field); // same shape: single string or string[]
+      return relationFieldToZod(field, ctx);
 
     case "keyvalue":
       return z.record(z.string(), z.string());
